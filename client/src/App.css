@@ -145,6 +145,11 @@ input[type='number'] {
   opacity: 0;
   transition: opacity 0.3s ease;
 }
+.edit-btn {
+  background-color: green;
+  top: 50%;
+  left: 114%;
+}
 
 .list li:hover .delete-btn {
   opacity: 1;

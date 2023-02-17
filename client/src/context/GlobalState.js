@@ -9,6 +9,7 @@ const initialState={
         // { id: 3, text: 'Book', amount: -10 },
         // { id: 4, text: 'Camera', amount: 150 }
     ],
+    edit:{},
     error:null,
     loading:true
 }
@@ -49,8 +50,16 @@ export const GlobalProvider =({ children })=>{
         }
 
         try {
-            const response = await axios.post('/api/v1/transactions', transaction, config)
-            console.log(response.data.data,'data');
+            var response
+            if(transaction._id){
+                response = await axios.put(`/api/v1/transactions/${transaction._id}`, transaction,config)
+
+            }
+            else{
+                response = await axios.post('/api/v1/transactions', transaction, config)
+
+            }
+
             dispatch({type:'ADD_TRANSACTION', payload:response.data.data})
             
         } catch (err) {
@@ -58,14 +67,24 @@ export const GlobalProvider =({ children })=>{
         }
     }  
 
+    async function editTransaction(transaction) {
+        try {
+            dispatch({type:'EDIT_TRANSACTION', payload:transaction})
+        } catch (err) {
+            
+        }
+    }
+
     return(
         <GlobalContext.Provider value={{
             transactions:state.transactions,
             error:state.error,
             loading:state.loading,
+            edit:state.edit,
             getTransactions,
             deleteTransaction,
-            addTransaction
+            addTransaction,
+            editTransaction
             }}>{children}</GlobalContext.Provider>
     )
 

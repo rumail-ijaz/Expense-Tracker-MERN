@@ -1,10 +1,19 @@
-import React,{useState, useContext} from 'react'
+import React,{useState, useContext, useEffect} from 'react'
 import { GlobalContext } from '../context/GlobalState'
 
 const AddTransaction = () => {
   const [text, setText] = useState('')
   const [amount, setAmount] = useState(0)
-  const {addTransaction} = useContext(GlobalContext)
+  const {addTransaction, edit} = useContext(GlobalContext)
+
+  useEffect(() => {
+    if(Object.keys(edit).length!=0){
+      setAmount(edit.amount)
+      setText(edit.text)
+    }
+    
+  }, [edit])
+  
 
   const onSubmit = (e)=>{
     e.preventDefault()
@@ -15,7 +24,18 @@ const AddTransaction = () => {
       amount:+amount
     }
 
-    addTransaction(newTransaction)
+    if(edit._id){
+      const update={
+        _id:edit._id,
+        text,
+        amount
+      }
+      addTransaction(update)
+    }
+    else{
+      addTransaction(newTransaction)
+    }
+
     setText('')
     setAmount(0)
   }

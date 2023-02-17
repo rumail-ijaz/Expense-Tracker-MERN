@@ -19,9 +19,9 @@ exports.getTransactions= async (req,res, next)=>{
 exports.addTransactions= async (req,res, next)=>{
     const {text, amount} = req.body
     try {
-        const transactions = await Transaction.create(req.body)
+        const transaction = await Transaction.create(req.body)
         
-        return res.status(200).json({success:true, count: transactions.length, data:transactions})
+        return res.status(200).json({success:true, data:transaction})
     } catch (err) {
         if(err.name == 'ValidationError'){
             const messages = Object.values(err.errors).map(val => val.message)
@@ -33,17 +33,40 @@ exports.addTransactions= async (req,res, next)=>{
     }
 }
 
+// @desc Add transactions
+// @route POST /api/v1/transactions
+// @access Public
+exports.updateTransactions= async (req,res, next)=>{
+    const {text, amount} = req.body
+    try {
+        const transaction = await Transaction.findByIdAndUpdate(req.params.id)
+        if(!transaction){
+            return res.status(404).json({success:false, error:'Not Found'})
+        }
+        else{
+            transaction.text=text || transaction.text
+            transaction.amount=amount || transaction.amount
+            const updatedTransaction = await transaction.save()
+            return res.status(200).json({success:true, data:updatedTransaction})
+
+        }
+        
+    } catch (err) {
+        return res.status(500).json({success: false, error:'Server Error'})
+    }
+}
+
 // @desc Delete transactions
 // @route DELETE /api/v1/transactions
 // @access Public
 exports.deleteTransactions= async (req,res, next)=>{
     try {
-        const transacton = await Transaction.findById(req.params.id)
-        if(!transacton){
+        const transaction = await Transaction.findById(req.params.id)
+        if(!transaction){
             return res.status(404).json({success:false, error:'Not Found'})
         }
 
-        await transacton.remove()
+        await transaction.remove()
         return res.status(200).json({success:true, data:{}})
 
     } catch (err) {

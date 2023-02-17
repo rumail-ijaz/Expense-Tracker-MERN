@@ -4,7 +4,6 @@ import Transaction from './Transaction'
 
 const TransactionList = () => {
   const {transactions, getTransactions } = useContext(GlobalContext)
-  console.log(transactions,'state');
   useEffect(()=>{
     getTransactions()
   },[])
