@@ -46,7 +46,9 @@ exports.updateTransactions= async (req,res, next)=>{
         else{
             transaction.text=text || transaction.text
             transaction.amount=amount || transaction.amount
+            
             const updatedTransaction = await transaction.save()
+
             return res.status(200).json({success:true, data:updatedTransaction})
 
         }

@@ -10,14 +10,14 @@ export default (state, action)=>{
         case 'DELETE_TRANSACTION' :
             return {
                 ...state,
-                transactions:state.transactions.filter(transaction => transaction._id!= action.payload)
+                transactions:state.transactions.filter(transaction => transaction._id!== action.payload)
             }
         case 'ADD_TRANSACTION' :
             const existItem=state.transactions.find(x=> x._id === action.payload._id)
         if(existItem){
             return {
                 ...state,
-                transactions:[...state.transactions.map(x=>x._id==existItem._id ? action.payload :x)]
+                transactions:[...state.transactions.map(x=>x._id===existItem._id ? action.payload :x)]
             }
         }
         else{

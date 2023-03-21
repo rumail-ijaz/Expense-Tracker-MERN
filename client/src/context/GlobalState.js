@@ -22,7 +22,6 @@ export const GlobalProvider =({ children })=>{
     const [state, dispatch] = useReducer(AppReducer, initialState)
 
     // Actions
-
     async function getTransactions() {
         try {
             const response = await axios.get('/api/v1/transactions')
@@ -32,6 +31,7 @@ export const GlobalProvider =({ children })=>{
             dispatch({type:'TRANSACTION_ERROR', payload:err.response.data.error})
         }
     }
+
     async function deleteTransaction(id) {
         try {
             await axios.delete(`/api/v1/transactions/${id}`)
@@ -71,7 +71,7 @@ export const GlobalProvider =({ children })=>{
         try {
             dispatch({type:'EDIT_TRANSACTION', payload:transaction})
         } catch (err) {
-            
+            dispatch({type:'TRANSACTION_ERROR', payload:err.response.data.error})   
         }
     }
 
@@ -85,7 +85,8 @@ export const GlobalProvider =({ children })=>{
             deleteTransaction,
             addTransaction,
             editTransaction
-            }}>{children}</GlobalContext.Provider>
+            }}> {children}
+        </GlobalContext.Provider>
     )
 
 }
